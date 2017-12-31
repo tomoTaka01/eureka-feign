@@ -55,3 +55,6 @@ Hello java from port is [8001]
 Hello java from port is [8002]
 ```
 The response port is 8001 or 8002, so client load balancing works fine!
+
+  * to see the image(sorry the below link is in Japanese, but there is image picture)
+    * see:http://tomotaka.hatenablog.com/entry/2017/12/31/183642
