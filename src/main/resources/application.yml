@@ -2,9 +2,3 @@ server:
   port: 8888
   servlet:
     context-path: /sample
-say-hello:
-  ribbon:
-    eureka:
-      enabled: false
-    listOfServers: localhost:8001,localhost:8002
-    ServerListRefreshInterval: 15000
