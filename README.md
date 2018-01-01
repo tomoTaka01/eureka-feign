@@ -4,6 +4,8 @@
   * for eureka client(service discovery) to see:https://github.com/tomoTaka01/eureka-client
 
 ### Ribbon with Eureka service discovery
+  ![GitHub Logo](/images/ribbon-eureka-flow.png)
+
   * just add @LoadBalanced annotaion to RestTemplate
   * fix the url to registered Eureka service name like greeting-service
   * SayHelloEurekaController.java
