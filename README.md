@@ -1,7 +1,40 @@
 ## Spring Boot Eureka Ribbon sample
-  * as of 2017-12-31, SpringBoot version 2.0.0.M7
+  * as of 2018-01-02, SpringBoot version 2.0.0.M7
   * for eureka server to see:https://github.com/tomoTaka01/eureka-server
   * for eureka client(service discovery) to see:https://github.com/tomoTaka01/eureka-client
+
+### For Hystrix(Circuit Breaker)
+  * The below show the response from eureka client port 8001 or 8002
+  * If the work takes more then 3 sec, return value is [work not yet node.] by using Hystrix
+  ![GitHub Logo](/images/work.png)
+
+  * WorkCotroller.java
+    * HystrixComman annotaion with timeout setting work, so the work service take more than 3 sec fail.
+
+
+```java
+@RestController
+public class WorkController {
+    private static final Logger logger = LoggerFactory.getLogger(WorkController.class);
+    @Autowired
+        private RestTemplate restTemplate;
+
+    @RequestMapping("/work/eureka")
+        @HystrixCommand(fallbackMethod = "workFallback", commandProperties = {
+                @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "3100")
+                })
+    public String work() {
+        logger.info("start work from eureka");
+        String work = restTemplate.getForObject("http://greeting-service/work", String.class);
+        logger.info("end work from eureka");
+        return work;
+    }
+
+    public String workFallback() {
+        return "work not yet done.";
+    }
+}
+```
 
 ### Ribbon with Eureka service discovery
   ![GitHub Logo](/images/ribbon-eureka-flow.png)
