@@ -6,16 +6,87 @@
 
 ### For Zuul Proxy
 
+  * The image for zuul proxy
+
+  ![GitHub Logo](/images/zuul-flow.png)
+
+  * Zuul proxy sample
+    * The below URL routes to backend service(greeting-service by eureka)
+
 ```
 curl "http://localhost:8888/sample/zuulwork"
 ```
+  * The response of above request, when the backend service is alive
 
 ```
 zuul work done. from server port is [8001]
 ```
 
+  * The response of above request, when the backend service is down
+
 ```
 zuul work failed. due to [Load balancer does not have available server for client: greeting-service]
+```
+
+  * appliaction.yml(for zuul route setting)
+
+```yml
+zuul:
+  ignoredServices: '*'
+  routes:
+    works:
+      path: /zuulwork
+      serviceId: greeting-service
+```
+
+  * WorkFallback.java(for circuit breaker)
+
+```java
+@Component
+public class WorkFallback implements FallbackProvider {
+    @Override
+        public ClientHttpResponse fallbackResponse(Throwable cause) {
+            ClientHttpResponse response = new ClientHttpResponse() {
+                @Override
+                public HttpStatus getStatusCode() throws IOException {
+                    return HttpStatus.OK;
+                }
+
+                @Override
+                public int getRawStatusCode() throws IOException {
+                    return HttpStatus.OK.value();
+                }
+
+                @Override
+                public String getStatusText() throws IOException {
+                    return "Ok";
+                }
+
+                @Override
+                public void close() {
+
+                }
+
+                @Override
+                public InputStream getBody() throws IOException {
+                    return new ByteArrayInputStream(("zuul work failed. due to [" + cause.getMessage() + "]").getBytes());
+                }
+
+                @Override
+                public HttpHeaders getHeaders() {
+                    HttpHeaders httpHeaders = new HttpHeaders();
+                    httpHeaders.setContentType(MediaType.TEXT_PLAIN);
+                    return httpHeaders;
+                }
+            };
+            return response;
+        }
+
+    @Override
+    public String getRoute() {
+        return "*";
+        // return "works"; // this does not work???
+    }
 ```
 
 ### For Hystrix(Circuit Breaker)
