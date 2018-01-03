@@ -2,3 +2,9 @@ server:
   port: 8888
   servlet:
     context-path: /sample
+zuul:
+  ignoredServices: '*'
+  routes:
+    works:
+      path: /zuulwork
+      serviceId: greeting-service

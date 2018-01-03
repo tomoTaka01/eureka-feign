@@ -4,6 +4,20 @@
   * for eureka client(service discovery) to see:https://github.com/tomoTaka01/eureka-client
   * minitor Hystrix stream is here: https://github.com/tomoTaka01/hystrix-dashboard-sample
 
+### For Zuul Proxy
+
+```
+curl "http://localhost:8888/sample/zuulwork"
+```
+
+```
+zuul work done. from server port is [8001]
+```
+
+```
+zuul work failed. due to [Load balancer does not have available server for client: greeting-service]
+```
+
 ### For Hystrix(Circuit Breaker)
   * The below show the response from eureka client port 8001 or 8002
   * If the work takes more then 3 sec, return value is [work not yet node.] by using Hystrix
